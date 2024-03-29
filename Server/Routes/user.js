@@ -13,6 +13,7 @@ user.get('/users', async (req, res, next) => {
     }
 });
 
+
 user.get('/users/:id', async (req, res, next) => {
     try {
         const user = await usermodel.findById(req.params.id);
