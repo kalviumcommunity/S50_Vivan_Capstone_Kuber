@@ -5,7 +5,7 @@ import works from "../assets/works.png";
 import auto from "../assets/auto.png";
 import doller from "../assets/Doller.png";
 import google from "../assets/Google.png";
-import Fackbook from "../assets/Facebook.png";
+import Facebook from "../assets/Facebook.png";
 import Email from "../assets/Email.png";
 
 function LoginModal({ onClose }) {
@@ -32,7 +32,7 @@ function LoginModal({ onClose }) {
               className="flex justify-evenly items-center gap-2 w-full py-2 rounded-lg border-2 border-slate-500 text-base font-medium text-gray-700 bg-white"
               onClick={handleEmailLogin}
             >
-              <img className="h-6 w-8" src={Fackbook} alt="Facebook" />
+              <img className="h-6 w-8" src={Facebook} alt="Facebook" />
               Login with Facebook
             </button>
             <button
@@ -44,7 +44,7 @@ function LoginModal({ onClose }) {
             </button>
             <div className="ml-2 mt-4">
               <span>Not a member? </span>
-              <a href="/signup" className="text-blue-500 hover:text-blue-700">
+              <a href="/signup" className="text-blue-500 hover:text-blue-700" >
                 Join now
               </a>
             </div>
@@ -111,11 +111,121 @@ function EmailLoginModal({ onClose }) {
   );
 }
 
+function SignUpModal({ onClose }) {
+  const [showEmailSignUp, setShowEmailSignUp] = useState(false);
+
+  const handleEmailSignUp = () => {
+    setShowEmailSignUp(true);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-slate-200 w-1/4 p-5 rounded-lg">
+        <button onClick={onClose} className="float-right font-bold">X</button>
+        <h2 className="text-xl mb-2">Sign Up for Kuber</h2>
+        {!showEmailSignUp ? (
+          <div className="space-y-4">
+            <button className="flex justify-evenly items-center gap-2 w-full py-2 rounded-lg border-2 border-slate-500 text-base font-medium text-gray-700 bg-white">
+
+              <img className="h-6 w-8" src={google} alt="Google" />
+              Sign-up with Google
+            </button>
+            <button
+              className="flex justify-evenly items-center gap-2 w-full py-2 rounded-lg border-2 border-slate-500 text-base font-medium text-gray-700 bg-white"
+              onClick={handleEmailSignUp}
+            >
+              <img className="h-6 w-8" src={Facebook} alt="Facebook" />
+              Sign-up with Facebook
+            </button>
+            <button
+              className="flex justify-evenly items-center gap-2 w-full py-2 rounded-lg border-2 border-slate-500 text-base font-medium text-gray-700 bg-amber-300"
+              onClick={handleEmailSignUp}
+            >
+              <img className="h-6 w-8" src={Email} alt="Email" />
+              Sign-up with Email
+            </button>
+            <div className="ml-2 mt-4">
+              <span>Already a member? </span>
+              <a href="#" className="text-blue-500 hover:text-blue-700" onClick={onClose}>
+                Login
+              </a>
+            </div>
+          </div>
+        ) : (
+          <EmailSignUpModal onClose={onClose} />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function EmailSignUpModal({ onClose }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [termsAccepted, setTermsAccepted] = useState(false);
+
+  const handleSignUp = () => {
+    console.log("Signing up with:", email, password);
+    onClose();
+  };
+
+  return (
+    <div className="flex flex-col space-y-4">
+       <input
+        type="text"
+        placeholder="Username"
+        value={Text}
+        onChange={(e) => setEmail(e.target.value)}
+        className="w-full border-2 border-slate-500 p-2 rounded"
+      />
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="w-full border-2 border-slate-500 p-2 rounded"
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="w-full border-2 border-slate-500 p-2 rounded"
+      />
+      <div className="flex items-center">
+        <input
+          type="checkbox"
+          checked={termsAccepted} 
+          onChange={() => setTermsAccepted(!termsAccepted)}
+          className="mr-2"
+        />
+        <label htmlFor="terms" className="text-sm text-gray-700">
+          I accept the terms and conditions
+        </label>
+      </div>
+      <button
+        onClick={handleSignUp}
+        className="w-full bg-amber-300 text-black p-2 rounded"
+        disabled={!termsAccepted}
+      >
+        Sign Up
+      </button>
+    </div>
+  );
+}
+
+
 function LandingPage() {
   const [isLoginModalVisible, setLoginModalVisible] = useState(false);
 
   const toggleLoginModal = () => {
     setLoginModalVisible(!isLoginModalVisible);
+  };
+ 
+  const [isSignUpModalVisible, setSignUpModalVisible] = useState(false);
+
+  const toggleSignUpModal = () => {
+    setSignUpModalVisible(!isSignUpModalVisible);
   };
 
   return (
@@ -147,7 +257,7 @@ function LandingPage() {
               Stop wasting time and money Kuber helps you find coupon codes.
             </h1>
           </div>
-          <button className="font-semibold text-2xl w-40 ml-24 h-12 text-white bg-yellow-300 mt-14 rounded-l">
+          <button className="font-semibold text-2xl w-40 ml-24 h-12 text-white bg-yellow-300 mt-14 rounded-l"  onClick={toggleSignUpModal}>
             Sign-up
           </button>
         </div>
@@ -195,7 +305,7 @@ function LandingPage() {
         </h1>
       </div>
       <div className="flex justify-center">
-        <button className="font-semibold text-2xl w-52 h-12 text-white bg-yellow-300 mt-14 rounded-l">
+        <button className="font-semibold text-2xl w-52 h-12 text-white bg-yellow-300 mt-14 rounded-l"  onClick={toggleSignUpModal}>
           Sign-up
         </button>
       </div>
@@ -208,6 +318,8 @@ function LandingPage() {
         </div>
       </div>
       {isLoginModalVisible && <LoginModal onClose={toggleLoginModal} />}
+      {isSignUpModalVisible && <SignUpModal onClose={toggleSignUpModal} />}
+
     </>
   );
 }
