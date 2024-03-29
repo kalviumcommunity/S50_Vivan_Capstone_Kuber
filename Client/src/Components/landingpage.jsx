@@ -7,6 +7,7 @@ import doller from "../assets/Doller.png";
 import google from "../assets/Google.png";
 import Facebook from "../assets/Facebook.png";
 import Email from "../assets/Email.png";
+import axios from 'axios';
 
 function LoginModal({ onClose }) {
   const [showEmailLogin, setShowEmailLogin] = useState(false);
@@ -160,22 +161,35 @@ function SignUpModal({ onClose }) {
 }
 
 function EmailSignUpModal({ onClose }) {
+  const [username, setUsername] = useState(""); // Changed variable name to 'username' for clarity
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
 
-  const handleSignUp = () => {
-    console.log("Signing up with:", email, password);
-    onClose();
+  const handleSignUp = async () => {
+    try {
+      // Make POST request to backend server
+      const response = await axios.post('http://localhost:3000/users', {
+        User_Name: username,
+        Email: email,
+        Password: password
+      });
+
+      console.log("User signed up successfully:", response.data);
+
+      onClose();
+    } catch (error) {
+      console.error("Error signing up:", error);
+    }
   };
 
   return (
     <div className="flex flex-col space-y-4">
-       <input
+      <input
         type="text"
         placeholder="Username"
-        value={Text}
-        onChange={(e) => setEmail(e.target.value)}
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
         className="w-full border-2 border-slate-500 p-2 rounded"
       />
       <input
