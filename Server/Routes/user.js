@@ -14,18 +14,18 @@ user.get('/users', async (req, res, next) => {
 });
 
 
-user.get('/users/:id', async (req, res, next) => {
+user.get('/users/:id', async (req, res) => {
     try {
-        const user = await usermodel.findById(req.params.id);
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-        res.json(user);
+      const user = await user.findById(req.params.id); 
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      res.json(user);
     } catch (error) {
-        console.error(error);
-        next(error);
+      res.status(500).json({ message: error.message });
     }
-});
+  });
 
 user.post('/users', async (req, res, next) => {
     try {

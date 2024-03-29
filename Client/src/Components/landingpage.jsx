@@ -160,15 +160,36 @@ function SignUpModal({ onClose }) {
   );
 }
 
+
 function EmailSignUpModal({ onClose }) {
-  const [username, setUsername] = useState(""); // Changed variable name to 'username' for clarity
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
+
+  const validateInput = () => {
+    const errors = {};
+    if (!username.trim() || username.length < 3) {
+      errors.username = '*Username must be at least 3 characters long';
+    }
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
+      errors.email = '*Please enter a valid email address';
+    }
+    if (!password || password.length < 6) {
+      errors.password = '*Password must be at least 6 characters long';
+    }
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleSignUp = async () => {
+    if (!validateInput()) {
+      console.error("Validation failed:", validationErrors);
+      return; 
+    }
+
     try {
-      // Make POST request to backend server
       const response = await axios.post('http://localhost:3000/users', {
         User_Name: username,
         Email: email,
@@ -176,8 +197,7 @@ function EmailSignUpModal({ onClose }) {
       });
 
       console.log("User signed up successfully:", response.data);
-
-      onClose();
+      onClose(); // Close the modal on successful sign up
     } catch (error) {
       console.error("Error signing up:", error);
     }
@@ -192,6 +212,7 @@ function EmailSignUpModal({ onClose }) {
         onChange={(e) => setUsername(e.target.value)}
         className="w-full border-2 border-slate-500 p-2 rounded"
       />
+      {validationErrors.username && <p className="text-red-500 text-xs">{validationErrors.username}</p>}
       <input
         type="email"
         placeholder="Email"
@@ -199,6 +220,7 @@ function EmailSignUpModal({ onClose }) {
         onChange={(e) => setEmail(e.target.value)}
         className="w-full border-2 border-slate-500 p-2 rounded"
       />
+      {validationErrors.email && <p className="text-red-500 text-xs">{validationErrors.email}</p>}
       <input
         type="password"
         placeholder="Password"
@@ -206,10 +228,11 @@ function EmailSignUpModal({ onClose }) {
         onChange={(e) => setPassword(e.target.value)}
         className="w-full border-2 border-slate-500 p-2 rounded"
       />
+      {validationErrors.password && <p className="text-red-500 text-xs">{validationErrors.password}</p>}
       <div className="flex items-center">
         <input
           type="checkbox"
-          checked={termsAccepted} 
+          checked={termsAccepted}
           onChange={() => setTermsAccepted(!termsAccepted)}
           className="mr-2"
         />
@@ -276,7 +299,7 @@ function LandingPage() {
           </button>
         </div>
       </div>
-      <div className="ml-96">
+      <div className="ml-96 mt-[-6%]">
         <img src={works} alt="works" />
       </div>
       <div className="bg-cyan-300 w-screen h-[60vh] mt-20 flex justify-evenly">
