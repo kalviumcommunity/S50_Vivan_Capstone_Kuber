@@ -4,6 +4,7 @@ import add from "../assets/add.png";
 import down from "../assets/down.png";
 import wallet from "../assets/Wallet.png";
 import wonder from "../assets/wonder.png";
+import off from "../assets/off.png";
 
 function MainPage() {
   return (
@@ -54,7 +55,7 @@ function MainPage() {
         <img className="h-4/6 mt-20" src={wonder} alt={wonder} />
       </div>
 
-      <div className="flex">
+      <div className="flex ml-20">
         <div className="bg-white rounded-lg p-6 space-y-4">
           <div>
             <h1 className="text-3xl font-bold">New To Kuber</h1>
@@ -86,7 +87,7 @@ function MainPage() {
         </div>
       </div>
 
-      <div>
+      <div className="ml-20">
         <div className="bg-white rounded-lg p-6 space-y-4">
           <div>
             <h1 className="text-3xl font-bold">
@@ -120,35 +121,46 @@ function MainPage() {
         </div>
 
         <div>
-          <div>
-            <div className="bg-white rounded-lg p-6 space-y-4">
-              <div>
-                <h1 className="text-3xl font-bold">
-                Newly Added Coupons
-                </h1>
+          <div className="bg-white rounded-lg p-6 space-y-4">
+            <div>
+              <h1 className="text-3xl font-bold">Newly Added Coupons</h1>
+            </div>
+            <div className="flex">
+              <div className="bg-sky-300 h-32  rounded-lg flex items-center space-x-4 p-4">
+                <img
+                  className="h-24 w-24 border-gray-950 border-2 rounded-lg"
+                  src={wonder}
+                  alt="logo_black"
+                />
               </div>
-              <div className="flex">
-                <div className="bg-sky-300 h-32  rounded-lg flex items-center space-x-4 p-4">
-                  <img
-                    className="h-24 w-24 border-gray-950 border-2 rounded-lg"
-                    src={wonder}
-                    alt="logo_black"
-                  />
-                </div>
-                <div className="bg-sky-300 ml-20 h-32  rounded-lg flex items-center space-x-4 p-4">
-                  <img
-                    className="h-24 w-24 border-gray-950 border-2 rounded-lg"
-                    src={wonder}
-                    alt="logo_black"
-                  />
-                </div>
+              <div className="bg-sky-300 ml-20 h-32  rounded-lg flex items-center space-x-4 p-4">
+                <img
+                  className="h-24 w-24 border-gray-950 border-2 rounded-lg"
+                  src={wonder}
+                  alt="logo_black"
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
-
-
+      <div className="bg-amber-200 rounded-xl w-[90%] h-72 flex justify-evenly ml-24 mt-10">
+              <div className="mt-20">
+                <h1 className="text-4xl mb-5">See stores with more deals</h1>
+                <h2 className="text-2xl">Browse our store directory</h2>
+              </div>
+              <div>
+                <img className="w-80  flex justify-center" src={off} alt="" />
+              </div>
+            </div>
+            <div className="bg-black w-screen h-[40vh] mt-20">
+              <div className="flex pt-10">
+                <h1 className="text-white text-2xl ml-10">Company</h1>
+                <h1 className="text-white text-2xl ml-10">Help</h1>
+                <h1 className="text-white text-2xl ml-10">News</h1>
+                <h1 className="text-white text-2xl ml-10">Careers</h1>
+              </div>
+            </div>
     </>
   );
 }
