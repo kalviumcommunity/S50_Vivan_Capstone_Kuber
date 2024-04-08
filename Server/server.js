@@ -4,6 +4,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 const DataBase = require("./config/database");
 const userRoutes = require('./Routes/user');
+const userCoupon = require('./Routes/coupon');
 const cors = require('cors');
 
 
@@ -11,6 +12,7 @@ DataBase();
 app.use(cors());
 app.use(express.json());
 app.use('/', userRoutes);
+app.use('/', userCoupon);
 
 app.use((req, res, next) => {
   const error = new Error('Not Found');
