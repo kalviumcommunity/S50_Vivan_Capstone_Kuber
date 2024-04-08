@@ -95,7 +95,7 @@ const addnewpage = () => {
             <div className="flex justify-center ">
               <input
                 type="text"
-                placeholder="Upload Img"
+                placeholder="Add New"
                 className="mb-8 bg-white w-9/12 text-center p-2 rounded-2xl font-semibold "
               />
             </div>
