@@ -4,263 +4,17 @@ import logo from "../assets/logo.png";
 import works from "../assets/works.png";
 import auto from "../assets/auto.png";
 import doller from "../assets/Doller.png";
-import google from "../assets/Google.png";
-import Facebook from "../assets/Facebook.png";
-import Email from "../assets/Email.png";
-import axios from 'axios';
-
-function LoginModal({ onClose }) {
-  const [showEmailLogin, setShowEmailLogin] = useState(false);
-
-  const handleEmailLogin = () => {
-    setShowEmailLogin(true);
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-slate-200 w-1/4 p-5 rounded-lg">
-        <button onClick={onClose} className="float-right font-bold">
-          X
-        </button>
-        <h2 className="text-xl mb-2">Login to Kuber</h2>
-        {!showEmailLogin ? (
-          <div className="space-y-4">
-            <button className="flex justify-evenly items-center gap-2 w-full py-2 rounded-lg border-2 border-slate-500 text-base font-medium text-gray-700 bg-white">
-              <img className="h-6 w-8" src={google} alt="Google" />
-              Login with Google
-            </button>
-            <button
-              className="flex justify-evenly items-center gap-2 w-full py-2 rounded-lg border-2 border-slate-500 text-base font-medium text-gray-700 bg-white"
-              onClick={handleEmailLogin}
-            >
-              <img className="h-6 w-8" src={Facebook} alt="Facebook" />
-              Login with Facebook
-            </button>
-            <button
-              className="flex justify-evenly items-center gap-2 w-full py-2 rounded-lg border-2 border-slate-500 text-base font-medium text-gray-700 bg-amber-300"
-              onClick={handleEmailLogin}
-            >
-              <img className="h-6 w-8 " src={Email} alt="Email" />
-              Login with Email
-            </button>
-            <div className="ml-2 mt-4">
-              <span>Not a member? </span>
-              <a href="/signup" className="text-blue-500 hover:text-blue-700" >
-                Join now
-              </a>
-            </div>
-          </div>
-        ) : (
-          <EmailLoginModal onClose={onClose} />
-        )}
-      </div>
-    </div>
-  );
-}
-
-function EmailLoginModal({ onClose }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [termsAccepted, setTermsAccepted] = useState(false);
-
-  const handleLogin = () => {
-    console.log("Logging in with:", email, password);
-    onClose();
-  };
-
-  return (
-    <div className="flex flex-col space-y-4">
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="w-full border-2 mt-5 border-slate-500 p-2 border rounded"
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="w-full border-2 border-slate-500 p-2 border rounded"
-      />
-      <div className="flex items-center">
-        <input
-          type="checkbox"
-          checked={termsAccepted}
-          onChange={() => setTermsAccepted(!termsAccepted)}
-          className="mr-2"
-        />
-        <label htmlFor="terms" className="text-sm text-gray-700">
-          I accept the terms and conditions
-        </label>
-      </div>
-      <button
-        onClick={handleLogin}
-        className="w-full bg-amber-300 text-black p-2 rounded"
-        disabled={!termsAccepted}
-      >
-        Login
-      </button>
-      <div className="ml-2 mt-4">
-        <span>Not a member? </span>
-        <a href="/signup" className="text-blue-500 hover:text-blue-700">
-          Join now
-        </a>
-      </div>
-    </div>
-  );
-}
-
-function SignUpModal({ onClose }) {
-  const [showEmailSignUp, setShowEmailSignUp] = useState(false);
-
-  const handleEmailSignUp = () => {
-    setShowEmailSignUp(true);
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-slate-200 w-1/4 p-5 rounded-lg">
-        <button onClick={onClose} className="float-right font-bold">X</button>
-        <h2 className="text-xl mb-2">Sign Up for Kuber</h2>
-        {!showEmailSignUp ? (
-          <div className="space-y-4">
-            <button className="flex justify-evenly items-center gap-2 w-full py-2 rounded-lg border-2 border-slate-500 text-base font-medium text-gray-700 bg-white">
-
-              <img className="h-6 w-8" src={google} alt="Google" />
-              Sign-up with Google
-            </button>
-            <button
-              className="flex justify-evenly items-center gap-2 w-full py-2 rounded-lg border-2 border-slate-500 text-base font-medium text-gray-700 bg-white"
-              onClick={handleEmailSignUp}
-            >
-              <img className="h-6 w-8" src={Facebook} alt="Facebook" />
-              Sign-up with Facebook
-            </button>
-            <button
-              className="flex justify-evenly items-center gap-2 w-full py-2 rounded-lg border-2 border-slate-500 text-base font-medium text-gray-700 bg-amber-300"
-              onClick={handleEmailSignUp}
-            >
-              <img className="h-6 w-8" src={Email} alt="Email" />
-              Sign-up with Email
-            </button>
-            <div className="ml-2 mt-4">
-              <span>Already a member? </span>
-              <a href="#" className="text-blue-500 hover:text-blue-700" onClick={onClose}>
-                Login
-              </a>
-            </div>
-          </div>
-        ) : (
-          <EmailSignUpModal onClose={onClose} />
-        )}
-      </div>
-    </div>
-  );
-}
-
-
-function EmailSignUpModal({ onClose }) {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [termsAccepted, setTermsAccepted] = useState(false);
-  const [validationErrors, setValidationErrors] = useState({});
-
-  const validateInput = () => {
-    const errors = {};
-    if (!username.trim() || username.length < 3) {
-      errors.username = '*Username must be at least 3 characters long';
-    }
-    if (!/^\S+@\S+\.\S+$/.test(email)) {
-      errors.email = '*Please enter a valid email address';
-    }
-    if (!password || password.length < 6) {
-      errors.password = '*Password must be at least 6 characters long';
-    }
-    setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  const handleSignUp = async () => {
-    if (!validateInput()) {
-      console.error("Validation failed:", validationErrors);
-      return; 
-    }
-
-    try {
-      const response = await axios.post('http://localhost:3000/users', {
-        User_Name: username,
-        Email: email,
-        Password: password
-      });
-
-      console.log("User signed up successfully:", response.data);
-      onClose(); // Close the modal on successful sign up
-    } catch (error) {
-      console.error("Error signing up:", error);
-    }
-  };
-
-  return (
-    <div className="flex flex-col space-y-4">
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        className="w-full border-2 border-slate-500 p-2 rounded"
-      />
-      {validationErrors.username && <p className="text-red-500 text-xs">{validationErrors.username}</p>}
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="w-full border-2 border-slate-500 p-2 rounded"
-      />
-      {validationErrors.email && <p className="text-red-500 text-xs">{validationErrors.email}</p>}
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="w-full border-2 border-slate-500 p-2 rounded"
-      />
-      {validationErrors.password && <p className="text-red-500 text-xs">{validationErrors.password}</p>}
-      <div className="flex items-center">
-        <input
-          type="checkbox"
-          checked={termsAccepted}
-          onChange={() => setTermsAccepted(!termsAccepted)}
-          className="mr-2"
-        />
-        <label htmlFor="terms" className="text-sm text-gray-700">
-          I accept the terms and conditions
-        </label>
-      </div>
-      <button
-        onClick={handleSignUp}
-        className="w-full bg-amber-300 text-black p-2 rounded"
-        disabled={!termsAccepted}
-      >
-        Sign Up
-      </button>
-    </div>
-  );
-}
-
+import LoginModal from "./LoginModal";
+import SignUpModal from "./SignUpModal";
 
 function LandingPage() {
   const [isLoginModalVisible, setLoginModalVisible] = useState(false);
+  const [isSignUpModalVisible, setSignUpModalVisible] = useState(false);
 
   const toggleLoginModal = () => {
     setLoginModalVisible(!isLoginModalVisible);
   };
  
-  const [isSignUpModalVisible, setSignUpModalVisible] = useState(false);
-
   const toggleSignUpModal = () => {
     setSignUpModalVisible(!isSignUpModalVisible);
   };
@@ -308,7 +62,7 @@ function LandingPage() {
             Automatic coupons
           </h1>
           <h2 className="text-2xl mt-4 text-center">
-            Still looking for codes on your own? We’ll search for them so you
+            Still looking for codes on your own? We'll search for them so you
             don’t have to. If we find working codes, we’ll automatically apply
             the best one to your cart.
           </h2>
@@ -355,9 +109,9 @@ function LandingPage() {
         </div>
       </div>
       {isLoginModalVisible && <LoginModal onClose={toggleLoginModal} />}
-      {isSignUpModalVisible && <SignUpModal onClose={toggleSignUpModal} />}
-
+      {isSignUpModalVisible && <SignUpModal onClose={toggleSignUpModal}  />}
     </>
   );
 }
+
 export default LandingPage;

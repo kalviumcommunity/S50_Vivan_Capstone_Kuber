@@ -1,0 +1,134 @@
+import React from "react";
+import logo_black from "../assets/logo-black.png";
+import add from "../assets/add.png";
+import down from "../assets/down.png";
+import wallet from "../assets/Wallet.png";
+import coupon1 from "../assets/dummy1.jpg";
+import coupon2 from "../assets/dummy2.jpg";
+import like from "../assets/like.png";
+import share from "../assets/share.png";
+import wonder from "../assets/wonder.png";
+
+const Coupon = () => {
+  return (
+    <>
+      <div className="bg-white border-b-2">
+        <div className="flex justify-between items-center py-4 px-6">
+          <div className="flex justify-between items-center space-x-4 w-1/2 rounded-lg">
+            <img src={logo_black} alt="logo" className="h-14" />
+            <input
+              type="text"
+              placeholder="Search For Items"
+              className="px-4 w-9/12 py-2 bg-slate-200 border rounded-lg"
+            />
+          </div>
+
+          <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-2">
+              <button className="bg-transparent items-center flex text-black text-xl font-semibold py-2 px-4">
+                Shop
+                <img src={down} alt="down" className="h-4" />
+              </button>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <button className="bg-transparent items-center flex text-black text-xl font-semibold py-2 px-4">
+                Wallet
+                <img src={wallet} alt="wallet" className="h-6 ml-2" />
+              </button>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <button className="bg-transparent items-center flex text-black text-xl font-semibold py-2 px-4">
+                Add New
+                <img src={add} alt="add" className="h-4 ml-1 mt-1" />
+              </button>
+            </div>
+          </div>
+          <div className="flex items-center space-x-4">
+            <button className="items-center flex text-black text-xl font-semibold py-2 px-4">
+              Login
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div className="flex p-24 pt-14">
+        <div className="w-2/3 m-0.5">
+          <div className="bg-slate-100 border-2 p-6 flex justify-center ">
+            <img className="w-56" src={coupon2} alt="" />
+          </div>
+
+          <div className="bg-slate-100 border-2  mt-1  flex justify-start p-5">
+            <img className="w-20 mr-14 ml-15 " src={coupon2} alt="" />
+            <img className="w-20" src={coupon2} alt="" />
+          </div>
+
+          <div className="bg-slate-100 border-2  mt-1">
+            <div className="bg-slate-100 ml-14 pt-5">
+              <h1 className="text-2xl">Details</h1>
+              <div className="flex justify-start pt-5 pb-5 border-b-2 ">
+                <h2 className="mr-24 ">Brand</h2>
+                <h2>Kuber</h2>
+              </div>
+            </div>
+            <div className="ml-14">
+              <h1 className="text-2xl pt-4 pb-5">Description</h1>
+              <h3>
+                At the time of listing, you shall be contacted if there is
+                information needed on your posting, once all the information is
+                approved, your post shall go live. At the time of going live,
+                you shall be intimated via SMS. On purchase, you shall be
+                notified via SMS to your registered phone. Payouts shall happen
+                on purchase confirmation; a team from Cansell will reach out to
+                you for payout options.
+              </h3>
+            </div>
+          </div>
+        </div>
+
+        <div className="w-1/3 m-0.5">
+          <div className=" bg-slate-100 border-2 ">
+            <div className="flex justify-between h-14">
+              <h1 className="text-4xl font-semibold m-5 ">$500</h1>
+              <div className="flex justify-evenly">
+                <img className="w-10 h-10 m-5"   src={share} alt="" />
+                <img className="w-10 h-10 m-5" src={like} alt="" />
+              </div>
+            </div>
+            <div className="text-2xl flex justify-between m-2">
+              <h1 className="m-4">Timeleft-99:99</h1>
+              <h1 className="m-4">today</h1>
+            </div>
+          </div>
+
+          <div className=" bg-slate-100 border-2 flex justify-evenly h-28 items-center mt-1">
+            <div>
+              <img
+                className="h-24 w-24 border-gray-950 border-2 rounded-full"
+                src={wonder}
+                alt=""
+              />
+            </div>
+            <div>
+              <div className="text-2xl text-center">KUBER USER</div>
+              <div className="bg-yellow-300 text-center w-52 h-8">
+                Chat with user
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-slate-100 border-2 h-28 pl-12 mt-1">
+            <h1 className="text-3xl mt-2">Post Details</h1>
+            <h1 className="text-xl">posted on : 9 Apr 2029</h1>
+            <h1 className="text-xl">Exp Date : 9 Apr 2029</h1>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Coupon;
