@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import { storage } from "./firebase/firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import logo_black from "../assets/logo-black.png";
 import add from "../assets/add.png";
 import down from "../assets/down.png";
@@ -7,35 +9,47 @@ import fox from "../assets/fox.png";
 import discount from "../assets/discount.png";
 import axios from 'axios';
 
-const addnewpage = () => {
+const AddNewPage = () => {
+  const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData.entries());
+    const file = formData.get("Add_New");
 
     try {
-      const response = await fetch('http://localhost:3000/coupons', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      });
+      if (!file) {
+        throw new Error('Please select an image');
+      }
 
-      if (response.ok) {
+      const storageRef = ref(storage, "path/to/uploads/" + file.name);
+      const uploadTask = await uploadBytes(storageRef, file);
+
+   
+      const downloadURL = await getDownloadURL(uploadTask.ref);
+
+      // Prepare data to send to the server
+      const dataToSend = {
+        ...Object.fromEntries(formData.entries()),
+        imageUrl: downloadURL
+      };
+
+      // Send data to the server
+      const response = await axios.post('http://localhost:3000/coupons', dataToSend);
+
+      if (response.status === 201) {
         alert('Coupon submitted successfully!');
         e.target.reset();
+        setError(null);
       } else {
         throw new Error('Failed to submit coupon');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Failed to submit coupon');
+      setError(error.message);
     }
   };
-
+  
   return (
     <>
       <div className="bg-white border-b-2">
@@ -132,12 +146,13 @@ const addnewpage = () => {
           />
         </div>
         <div className="flex justify-center ">
-          <input
-            type="text"
-            name="Add_New" 
-            placeholder="Add New"
-            className="mb-8 bg-white w-9/12 text-center p-2 rounded-2xl font-semibold "
-          />
+        <input
+        type="file"
+        accept="image/*"
+        name="Add_New" 
+        placeholder="Add New"
+        className="mb-8 bg-white w-9/12 text-center p-2 rounded-2xl font-semibold "
+    />
         </div>
         <div className="flex items-center ml-20">
           <input type="checkbox" className="mr-2" id="terms" />
@@ -192,4 +207,4 @@ const addnewpage = () => {
   );
 };
 
-export default addnewpage;
+export default AddNewPage;
