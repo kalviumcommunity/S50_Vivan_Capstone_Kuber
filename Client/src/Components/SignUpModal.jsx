@@ -16,13 +16,6 @@ function SignUpModal({ onClose }) {
     window.location.href = "http://localhost:3000/auth/google";
   };
 
-  // const handleGoogleSignUpSuccess = (response) => {
-  //   console.log("Google sign-up success:", response);
-  // };
-
-  // const handleGoogleSignUpFailure = (error) => {
-  //   console.error("Google sign-up error:", error);
-  // };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
