@@ -26,7 +26,7 @@ const AddNewPage = () => {
       const uploadTask = await uploadBytes(storageRef, file);
       const downloadURL = await getDownloadURL(uploadTask.ref);
 
-      // Set the image URL directly in the form data
+
       formData.set("image", downloadURL);
 
       const response = await axios.post('http://localhost:3000/coupons', formData, {

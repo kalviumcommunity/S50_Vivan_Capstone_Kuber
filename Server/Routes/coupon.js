@@ -30,27 +30,25 @@ router.get('/coupons/:id', async (req, res) => {
 // Create a new coupon
 router.post('/coupons', async (req, res, next) => {
     try {
-        // Log the incoming request body
         console.log('Incoming request body:', req.body);
 
-        // Extract the imageUrl from the request body
         const { image, ...couponData } = req.body;
 
-        // Log the extracted data
+
         console.log('Extracted coupon data:', couponData);
         console.log('Image URL:', image);
 
-        // Create a new coupon instance including the imageUrl
+
         const newCoupon = new couponmodel({ ...couponData, image });
         await newCoupon.save();
 
-        // Respond with the newly created coupon
+
         res.status(201).json(newCoupon);
     } catch (error) {
-        // Log the error details
+
         console.error('Error during coupon creation:', error);
 
-        // Respond with a 500 status code and error message
+
         res.status(500).json({ message: 'Failed to create coupon', error: error.message });
     }
 });
