@@ -6,7 +6,6 @@ const DataBase = require("./Config/database");
 const userRoutes = require("./Routes/user");
 const userCoupon = require("./Routes/coupon");
 const auth = require("./Routes/auth");
-// const CLIENT_ID = process.env.CLIENT_ID;
 require("./Config/Passport");
 const cors = require("cors");
 const passport = require("passport");

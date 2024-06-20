@@ -1,67 +1,87 @@
 const express = require('express');
-const router = express.Router(); 
-const { couponmodel } = require("../Model/coupon"); 
+const router = express.Router();
+const { couponmodel } = require("../Model/coupon");
 
-
+// Get all coupons
 router.get('/coupons', async (req, res, next) => {
     try {
         const coupons = await couponmodel.find();
         res.json(coupons);
     } catch (error) {
         console.error(error);
-        next(error);
+        res.status(500).json({ message: 'Failed to retrieve coupons' });
     }
 });
 
-
+// Get a single coupon by ID
 router.get('/coupons/:id', async (req, res) => {
     try {
-      const coupon = await couponmodel.findById(req.params.id);
-  
-      if (!coupon) {
-        return res.status(404).json({ message: 'Coupon not found' });
-      }
-      res.json(coupon);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-});
-
-router.post('/coupons', async (req, res, next) => {
-    try {
-        const newCoupon = await couponmodel.create(req.body);
-        res.status(201).json(newCoupon);
+        const coupon = await couponmodel.findById(req.params.id);
+        if (!coupon) {
+            return res.status(404).json({ message: 'Coupon not found' });
+        }
+        res.json(coupon);
     } catch (error) {
         console.error(error);
-        next(error);
+        res.status(500).json({ message: 'Failed to retrieve coupon' });
     }
 });
 
+// Create a new coupon
+router.post('/coupons', async (req, res, next) => {
+    try {
+        // Log the incoming request body
+        console.log('Incoming request body:', req.body);
+
+        // Extract the imageUrl from the request body
+        const { image, ...couponData } = req.body;
+
+        // Log the extracted data
+        console.log('Extracted coupon data:', couponData);
+        console.log('Image URL:', image);
+
+        // Create a new coupon instance including the imageUrl
+        const newCoupon = new couponmodel({ ...couponData, image });
+        await newCoupon.save();
+
+        // Respond with the newly created coupon
+        res.status(201).json(newCoupon);
+    } catch (error) {
+        // Log the error details
+        console.error('Error during coupon creation:', error);
+
+        // Respond with a 500 status code and error message
+        res.status(500).json({ message: 'Failed to create coupon', error: error.message });
+    }
+});
+
+
+// Update an existing coupon by ID
 router.put('/coupons/:id', async (req, res, next) => {
     try {
         const updatedCoupon = await couponmodel.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!updatedCoupon) {
-            return res.status(404).json({ error: 'Coupon not found' });
+            return res.status(404).json({ message: 'Coupon not found' });
         }
         res.json(updatedCoupon);
     } catch (error) {
         console.error(error);
-        next(error);
+        res.status(500).json({ message: 'Failed to update coupon' });
     }
 });
 
-
+// Delete a coupon by ID
 router.delete('/coupons/:id', async (req, res, next) => {
     try {
         const deletedCoupon = await couponmodel.findByIdAndDelete(req.params.id);
         if (!deletedCoupon) {
-            return res.status(404).json({ error: 'Coupon not found' });
+            return res.status(404).json({ message: 'Coupon not found' });
         }
         res.json({ message: 'Coupon deleted successfully' });
     } catch (error) {
         console.error(error);
-        next(error);
+        res.status(500).json({ message: 'Failed to delete coupon' });
     }
 });
 
-module.exports = router; 
+module.exports = router;

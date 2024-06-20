@@ -3,9 +3,10 @@ const mongoose = require("mongoose");
 const CouponSchema = new mongoose.Schema({
     Brand_Name: {
         type: String,
+        required: true,  
     },
     Date: {
-        type: String,
+        type: Date,
         required: true,
     },
     Price: {
@@ -19,8 +20,13 @@ const CouponSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    Link: {
+        type: String,
+        required: true,
+    },
     image: {
         type: String,
+        required: true, 
     },
 });
 

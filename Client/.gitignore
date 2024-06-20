@@ -2,3 +2,4 @@ node_modules
 dist
 mainpage
 package-lock.json
+dist 
