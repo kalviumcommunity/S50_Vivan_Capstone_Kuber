@@ -10,13 +10,15 @@ function App() {
   return (  
     // <Router>
       <Routes> {/* Wrap Routes around Route components */}
-        <Route path="/" element={<Firstpage />} /> {/* Define route for root URL */}
+        <Route path="/" element={<Firstpage />} />
         <Route path="/Mainpage" element={<MainPage />} />
         <Route path="/Coupon" element={<Coupon />} />
         <Route path="/Addnew" element={<Addnew />} />
+        <Route path="/coupon/:id" element={<Coupon />} />
       </Routes>
     // </Router>
   );
 }
 
 export default App;
+

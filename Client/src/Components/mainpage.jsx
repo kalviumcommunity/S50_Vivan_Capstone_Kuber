@@ -6,24 +6,20 @@ import down from "../assets/down.png";
 import wallet from "../assets/Wallet.png";
 import wonder from "../assets/wonder.png";
 import off from "../assets/off.png";
-
-
+import Newtokuber from "./Display-coupon/newtokuber";
 
 function MainPage() {
   const [coupons, setCoupons] = useState([]);
   const navigate = useNavigate();
 
-  // Function to navigate to the add new page
   const goToAddNewPage = () => {
     navigate("/Addnew");
   };
 
-  // Function to navigate to the main page
   const goToMainPage = () => {
     navigate("/mainpage");
   };
 
-  // Fetch data from http://localhost:3000/coupons
   useEffect(() => {
     fetch("http://localhost:3000/coupons")
       .then((response) => response.json())
@@ -67,7 +63,7 @@ function MainPage() {
           </div>
           <div className="flex items-center space-x-4">
             <button className=" items-center flex text-black text-xl  font-semibold py-2 px-4">
-              Login
+              Cart 0
             </button>
           </div>
         </div>
@@ -79,31 +75,7 @@ function MainPage() {
         <img className="h-4/6 mt-20" src={wonder} alt={wonder} />
       </div>
 
-      <div className="flex ml-20">
-        <div className="bg-white rounded-lg p-6 space-y-4">
-          <div>
-            <h1 className="text-3xl font-bold">New To Kuber</h1>
-          </div>
-          <div className="flex  ">
-            {coupons.map((coupon, index) => (
-              <div
-                key={index}
-                className="bg-sky-300 h-32 w-72 rounded-lg flex items-center space-x-4 p-4 mr-16"
-              >
-                <img
-                  className="h-24 w-24 border-gray-950 border-2 rounded-full"
-                  src={wonder}
-                  alt="logo_black"
-                />
-                <div>
-                  <h1 className="text-lg font-bold">{coupon.Brand_Name}</h1>
-                  <h3 className="text-sm">Earn 10 Gold coins</h3>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      <Newtokuber />
 
       <div className="ml-20 mt-8">
         <div className="bg-white rounded-lg p-6 space-y-4">
@@ -132,7 +104,6 @@ function MainPage() {
               />
               <div>
                 <h1 className="text-lg font-bold">Kuber Deals</h1>
-                <h3 className="text-sm">Earn 10 Gold coins</h3>
               </div>
             </div>
           </div>
