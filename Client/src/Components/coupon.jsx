@@ -72,12 +72,12 @@ const Coupon = () => {
       <div className="flex p-24 pt-14">
         <div className="w-2/3 m-0.5">
           <div className="bg-slate-100 border-2 p-6 flex justify-center">
-            <img className="w-56" src={coupon2} alt="" />
+            <img className="w-56" src={coupon.Image} alt="" />
           </div>
 
           <div className="bg-slate-100 border-2 mt-1 flex justify-start p-5">
-            <img className="w-20 mr-14 ml-15" src={coupon1} alt="" />
-            <img className="w-20" src={coupon2} alt="" />
+            <img className="w-20 mr-14 ml-15" src={coupon.Image} alt="" />
+            <img className="w-20" src={coupon.Image} alt="" />
           </div>
 
           <div className="bg-slate-100 border-2 mt-1">
