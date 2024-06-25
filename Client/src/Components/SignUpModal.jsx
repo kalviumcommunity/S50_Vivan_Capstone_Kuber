@@ -1,3 +1,4 @@
+// SignUpModal component /
 import React, { useState } from "react";
 import { GoogleLogin } from "react-google-login";
 import google from "../assets/Google.png";

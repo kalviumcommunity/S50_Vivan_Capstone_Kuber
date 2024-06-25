@@ -1,3 +1,4 @@
+// MainPage component 
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo_black from "../assets/logo-black.png";

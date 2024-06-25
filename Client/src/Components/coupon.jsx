@@ -1,3 +1,4 @@
+// coupon component
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import logo_black from "../assets/logo-black.png";

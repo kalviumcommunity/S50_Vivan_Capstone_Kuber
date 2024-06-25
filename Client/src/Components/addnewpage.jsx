@@ -1,3 +1,4 @@
+// AddNewPage component 
 import React, { useState } from "react";
 import { storage } from "./firebase/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
