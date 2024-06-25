@@ -12,14 +12,17 @@ function MainPage() {
   const [coupons, setCoupons] = useState([]);
   const navigate = useNavigate();
 
+  // Function to navigate to the Add New Page
   const goToAddNewPage = () => {
     navigate("/Addnew");
   };
 
+  // Function to navigate to the Main Page
   const goToMainPage = () => {
     navigate("/mainpage");
   };
 
+  // Fetching coupons data from the backend when the component mounts
   useEffect(() => {
     fetch("http://localhost:3000/coupons")
       .then((response) => response.json())

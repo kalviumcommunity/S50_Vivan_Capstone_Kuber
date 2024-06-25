@@ -11,14 +11,15 @@ function LandingPage() {
   const [isLoginModalVisible, setLoginModalVisible] = useState(false);
   const [isSignUpModalVisible, setSignUpModalVisible] = useState(false);
 
+  // Function to toggle the visibility of the login modal
   const toggleLoginModal = () => {
     setLoginModalVisible(!isLoginModalVisible);
   };
  
+  // Function to toggle the visibility of the signup modal
   const toggleSignUpModal = () => {
     setSignUpModalVisible(!isSignUpModalVisible);
   };
-
   return (
     <>
       <div className="h-screen w-screen flex">

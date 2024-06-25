@@ -12,6 +12,7 @@ import discount from "../assets/discount.png";
 const AddNewPage = () => {
   const [error, setError] = useState(null);
 
+  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -22,13 +23,15 @@ const AddNewPage = () => {
         throw new Error('Please select an image');
       }
 
+      // Upload the image to Firebase storage
       const storageRef = ref(storage, "image" + file.name);
       const uploadTask = await uploadBytes(storageRef, file);
       const downloadURL = await getDownloadURL(uploadTask.ref);
 
-
+      // Set the download URL of the uploaded image in the form data
       formData.set("image", downloadURL);
 
+      // Send the form data to the server
       const response = await axios.post('http://localhost:3000/coupons', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -48,7 +51,7 @@ const AddNewPage = () => {
       console.error('Error:', error);
       setError('Failed to submit coupon');
     }
-  }
+  };
 
   return (
     <>

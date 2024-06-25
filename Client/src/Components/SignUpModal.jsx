@@ -8,10 +8,12 @@ import EmailSignUpModal from "./EmailSignModal";
 function SignUpModal({ onClose }) {
   const [showEmailSignUp, setShowEmailSignUp] = useState(false);
 
+  // Function to show the email sign-up form
   const handleEmailSignUp = () => {
     setShowEmailSignUp(true);
   };
-  
+
+  // Function to handle Google sign-up by redirecting to the Google OAuth URL
   const handleGoogleSignUp = () => {
     window.location.href = "http://localhost:3000/auth/google";
   };

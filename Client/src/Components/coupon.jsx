@@ -12,9 +12,10 @@ import wonder from "../assets/wonder.png";
 
 const Coupon = () => {
   const { id } = useParams();
-  console.log('ID:', id);
+  console.log('ID:', id); // Logging the coupon ID for debugging
   const [coupon, setCoupon] = useState(null);
 
+  // Fetch the coupon data from the server when the component mounts or the ID changes
   useEffect(() => {
     fetch(`http://localhost:3000/coupons/${id}`) 
       .then(response => response.json())
@@ -22,9 +23,11 @@ const Coupon = () => {
       .catch(error => console.error('Error fetching coupon:', error));
   }, [id]);
 
+  // Show a loading message while the coupon data is being fetched
   if (!coupon) {
     return <div>Loading...</div>;
   }
+
 
   return (
     <>
