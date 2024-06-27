@@ -20,7 +20,7 @@ Our solution addresses the issue of underutilized coupons and vouchers by creati
 
 Overall, our website serves as a solution to the problem of underutilized coupons and vouchers, offering a convenient platform for users to buy and sell unused incentives while maximizing value for both buyers and sellers.
 
-## Technologies Used
+## Technologies Used In It 
 
 - **Frontend**: React.js, Tailwind CSS
 - **Backend**: Node.js, Express.js, MongoDB
@@ -31,6 +31,5 @@ Overall, our website serves as a solution to the problem of underutilized coupon
 ## About the Author
 
 This project was developed by Vivan Raj Mittakodi from Squad 50.
-
 ---
 Feel free to customize this README to fit your project's specific details and requirements.
