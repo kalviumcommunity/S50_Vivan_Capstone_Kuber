@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "kuber",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
