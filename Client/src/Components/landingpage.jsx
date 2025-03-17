@@ -11,107 +11,241 @@ function LandingPage() {
   const [isLoginModalVisible, setLoginModalVisible] = useState(false);
   const [isSignUpModalVisible, setSignUpModalVisible] = useState(false);
 
-  // Function to toggle the visibility of the login modal
-  const toggleLoginModal = () => {
-    setLoginModalVisible(!isLoginModalVisible);
-  };
- 
-  // Function to toggle the visibility of the signup modal
-  const toggleSignUpModal = () => {
-    setSignUpModalVisible(!isSignUpModalVisible);
-  };
-  return (
-    <>
-      <div className="h-screen w-screen flex">
-        <div>
-          <img
-            src={logo}
-            alt="logo"
-            className="w-[190px] h-[120px] ml-[20px] pt-[20px] absolute"
-          />
-          <img
-            src={doller}
-            className="absolute animate-bounce ml-60 mt-32"
-            alt="doller"
-          />
-          <img src={klg} alt="klg" className="mr-96" />
-        </div>
+  const toggleLoginModal = () => setLoginModalVisible(!isLoginModalVisible);
+  const toggleSignUpModal = () => setSignUpModalVisible(!isSignUpModalVisible);
 
-        <div>
-          <div className="justify-end text-center ml-[90%] mt-5 border-b-2 w-12 cursor-pointer">
-            <h3 onClick={toggleLoginModal}>Login</h3>
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-white to-blue-50">
+      <nav className="fixed w-full  z-50 bg-blue-900/95 backdrop-blur-md border-b border-cyan-300/20 shadow-xl">
+        <div className="container mx-auto px-6 py-4 flex justify-between items-center ">
+          
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-cyan-400/30 blur-lg opacity-70 group-hover:opacity-100 transition-opacity"></div>
+            <div className="relative flex items-center space-x-2">
+              <img
+                src={logo}
+                alt="logo"
+                className="w-32 md:w-48 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)] transition-transform hover:scale-105"
+              />
+              <img
+                src={doller}
+                className="absolute -top-0 -right-8 w-16 animate-bounce hover:rotate-[30deg] transition-transform"
+                alt="doller"
+              />
+            </div>
           </div>
-          <div className="text-7xl ml-24 mt-20 w-7/12 text-blue-900 font-semibold">
-            <h1>We search for the internet's best coupons</h1>
-          </div>
-          <div className="text-3xl ml-24 mt-10 w-2/5 text-blue-900 font-semibold">
-            <h1>
-              Stop wasting time and money Kuber helps you find coupon codes.
-            </h1>
-          </div>
-          <button className="font-semibold text-2xl w-40 ml-24 h-12 text-white bg-yellow-300 mt-14 rounded-l"  onClick={toggleSignUpModal}>
-            Sign-up
+
+         
+          <button
+            onClick={toggleLoginModal}
+            className="relative overflow-hidden px-8 py-2 bg-yellow-400 rounded-full font-bold text-blue-900 hover:text-white transition-all duration-300 group"
+          >
+            <span className="relative z-10">Login</span>
+            <div className="absolute inset-0 bg-cyan-400 w-0 group-hover:w-full transition-all duration-300 mix-blend-multiply"></div>
           </button>
         </div>
-      </div>
-      <div className="ml-96 mt-[-6%]">
-        <img src={works} alt="works" />
-      </div>
-      <div className="bg-cyan-300 w-screen h-[60vh] mt-20 flex justify-evenly">
-        <div className="w-2/6 mt-40">
-          <h1 className="text-4xl mt-10 text-center text-black font-semibold">
-            Automatic coupons
+      </nav>
+      {/* Hero Section */}
+      <section className="container mx-auto px-6 md:px-12 py-12 flex flex-col md:flex-row items-center pt-[250px]">
+        <div className="md:w-1/2 mb-12 md:mb-0">
+          <h1 className="text-4xl md:text-6xl font-bold text-blue-900 leading-tight mb-6">
+            We search for the internet's best coupons
           </h1>
-          <h2 className="text-2xl mt-4 text-center">
-            Still looking for codes on your own? We'll search for them so you
-            don’t have to. If we find working codes, we’ll automatically apply
-            the best one to your cart.
-          </h2>
+          <p className="text-xl md:text-2xl text-blue-700 mb-8">
+            Stop wasting time and money. Kuber helps you find coupon codes
+            automatically.
+          </p>
+          <button
+            onClick={toggleSignUpModal}
+            className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-3 px-8 rounded-full transform transition-all duration-300 hover:scale-105 shadow-lg"
+          >
+            Get Started Free
+          </button>
         </div>
-        <div className="mt-28">
-          <img className="w-5/6" src={auto} alt="Automatic Coupons" />
+        <div className="md:w-1/2 flex justify-center">
+          <img src={klg} alt="Kuber" className="max-w-md w-full" />
         </div>
-      </div>
-      <div className="flex justify-center">
-        <h1 className="text-center text-8xl mt-28 w-5/6">
-          “Become a coupon pro”
-        </h1>
-      </div>
-      <div className="flex justify-center mt-28">
-        <div className="bg-cyan-300 w-5/6 h-[45vh]">
-          <div className="flex justify-center text-6xl mt-24">
-            <h1>What Kuber members are getting:</h1>
-          </div>
-          <div className="flex justify-evenly text-4xl mt-20">
-            <h2 className="w-96 text-center">$126 Yearly Average Savings</h2>
-            <h2 className="w-96 text-center">
-              30,000+ Participating Merchants
+      </section>
+      {/* How It Works */}
+      <section className="bg-white py-16">
+        <div className="container mx-auto px-6 md:px-12">
+          <img
+            src={works}
+            alt="How it works"
+            className="mx-auto w-full max-w-4xl"
+          />
+        </div>
+      </section>
+      {/* Automatic Coupons */}
+      <section className="bg-cyan-100 py-20">
+        <div className="container mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center">
+          <div className="md:w-1/2 mb-12 md:mb-0">
+            <h2 className="text-3xl md:text-4xl font-bold text-blue-900 mb-6">
+              Automatic Coupon Application
             </h2>
-            <h2 className="w-96 text-center">17.9% Average Discount</h2>
+            <p className="text-lg md:text-xl text-blue-700 leading-relaxed">
+              We continuously monitor for the best available codes and
+              automatically apply the most savings to your cart. Focus on
+              shopping while we handle the discounts!
+            </p>
+          </div>
+          <div className="md:w-1/2 flex justify-center">
+            <img
+              src={auto}
+              alt="Automatic Coupons"
+              className="max-w-md w-full rounded-xl shadow-xl"
+            />
           </div>
         </div>
-      </div>
-      <div className="flex justify-center">
-        <h1 className="text-center text-7xl mt-28 w-5/6">
-          Too good to pass up, right? Start saving now.
-        </h1>
-      </div>
-      <div className="flex justify-center">
-        <button className="font-semibold text-2xl w-52 h-12 text-white bg-yellow-300 mt-14 rounded-l"  onClick={toggleSignUpModal}>
-          Sign-up
-        </button>
-      </div>
-      <div className="bg-black w-screen h-[40vh] mt-20">
-        <div className="flex pt-10">
-          <h1 className="text-white text-2xl ml-10">Company</h1>
-          <h1 className="text-white text-2xl ml-10">Help</h1>
-          <h1 className="text-white text-2xl ml-10">News</h1>
-          <h1 className="text-white text-2xl ml-10">Careers</h1>
+      </section>
+      {/* Stats Section */}
+      <section className="py-20 bg-blue-900 text-white">
+        <div className="container mx-auto px-6 md:px-12 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-16">
+            Why Millions Trust Kuber
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="p-6">
+              <div className="text-4xl font-bold text-yellow-400 mb-4">
+                $126+
+              </div>
+              <p className="text-xl">Yearly Average Savings</p>
+            </div>
+            <div className="p-6">
+              <div className="text-4xl font-bold text-yellow-400 mb-4">
+                30K+
+              </div>
+              <p className="text-xl">Participating Merchants</p>
+            </div>
+            <div className="p-6">
+              <div className="text-4xl font-bold text-yellow-400 mb-4">
+                17.9%
+              </div>
+              <p className="text-xl">Average Discount</p>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
+      {/* CTA Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-6 md:px-12 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold text-blue-900 mb-8">
+            Start Saving Today - It's Free!
+          </h2>
+          <button
+            onClick={toggleSignUpModal}
+            className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-4 px-12 rounded-full transform transition-all duration-300 hover:scale-105 shadow-lg text-xl"
+          >
+            Join Kuber Now
+          </button>
+        </div>
+      </section>
+      {/* Footer */}
+      <footer className="bg-blue-900 text-white py-12">
+        <div className="container mx-auto px-6 md:px-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <img src={logo} alt="Logo" className="w-32 mb-4" />
+              <p className="text-sm opacity-75">
+                Making online shopping affordable for everyone
+              </p>
+            </div>
+            <div>
+              <h3 className="font-bold mb-4">Company</h3>
+              <ul className="space-y-2 text-sm opacity-75">
+                <li>
+                  <a
+                    href="#"
+                    className="hover:text-yellow-400 transition-colors"
+                  >
+                    About
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="hover:text-yellow-400 transition-colors"
+                  >
+                    Careers
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="hover:text-yellow-400 transition-colors"
+                  >
+                    Blog
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-bold mb-4">Support</h3>
+              <ul className="space-y-2 text-sm opacity-75">
+                <li>
+                  <a
+                    href="#"
+                    className="hover:text-yellow-400 transition-colors"
+                  >
+                    Help Center
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="hover:text-yellow-400 transition-colors"
+                  >
+                    Contact
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="hover:text-yellow-400 transition-colors"
+                  >
+                    FAQ
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-bold mb-4">Legal</h3>
+              <ul className="space-y-2 text-sm opacity-75">
+                <li>
+                  <a
+                    href="#"
+                    className="hover:text-yellow-400 transition-colors"
+                  >
+                    Privacy
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="hover:text-yellow-400 transition-colors"
+                  >
+                    Terms
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="hover:text-yellow-400 transition-colors"
+                  >
+                    Security
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-white/10 mt-12 pt-8 text-center text-sm opacity-75">
+            © 2023 Kuber. All rights reserved.
+          </div>
+        </div>
+      </footer>
       {isLoginModalVisible && <LoginModal onClose={toggleLoginModal} />}
-      {isSignUpModalVisible && <SignUpModal onClose={toggleSignUpModal}  />}
-    </>
+      {isSignUpModalVisible && <SignUpModal onClose={toggleSignUpModal} />}
+    </div>
   );
 }
 

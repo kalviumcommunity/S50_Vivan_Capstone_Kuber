@@ -1,207 +1,285 @@
-// AddNewPage component 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { storage } from "./firebase/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import axios from 'axios';
-import logo_black from "../assets/logo-black.png";
-import add from "../assets/add.png";
-import down from "../assets/down.png";
-import wallet from "../assets/Wallet.png";
-import fox from "../assets/fox.png";
-import discount from "../assets/discount.png";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Eye, EyeOff, Store, Tag, Calendar, IndianRupee, Link as LinkIcon, Check } from "lucide-react";
+import NavBar from "./navbar";
 
 const AddNewPage = () => {
-  const [error, setError] = useState(null);
+  const [userId, setUserId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [showCode, setShowCode] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [minDate, setMinDate] = useState('');
 
-  // Function to handle form submission
+  useEffect(() => {
+    const today = new Date().toISOString().split('T')[0];
+    setMinDate(today);
+
+    const fetchUserId = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/auth/user", { withCredentials: true });
+        setUserId(response.data.userId);
+        localStorage.setItem("userId", response.data.userId);
+      } catch (error) {
+        setUserId(null);
+        localStorage.removeItem("userId");
+      }
+    };
+
+    const storedUserId = localStorage.getItem("userId");
+    storedUserId ? setUserId(storedUserId) : fetchUserId();
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!termsAccepted) {
+      toast.error("Please accept the terms & conditions");
+      return;
+    }
+
+    if (!userId) {
+      toast.error("Please log in to submit a coupon.");
+      return;
+    }
+
     const formData = new FormData(e.target);
-    const file = formData.get("image/");
+    const file = formData.get("image");
+    if (!file) {
+      toast.error("Please select an image.");
+      return;
+    }
 
+    const couponData = {
+      Brand_Name: formData.get("Brand_Name"),
+      Category: formData.get("Category"),
+      Date: formData.get("Date").split("-").reverse().join("/"),
+      Price: formData.get("Price"),
+      Description: formData.get("Description"),
+      Code: formData.get("Code"),
+      Link: formData.get("Link"),
+      userId
+    };
+
+    setLoading(true);
     try {
-      if (!file) {
-        throw new Error('Please select an image');
-      }
+      const storageRef = ref(storage, `coupons/${file.name}-${Date.now()}`);
+      await uploadBytes(storageRef, file);
+      couponData.image = await getDownloadURL(storageRef);
 
-      // Upload the image to Firebase storage
-      const storageRef = ref(storage, "image" + file.name);
-      const uploadTask = await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(uploadTask.ref);
-
-      // Set the download URL of the uploaded image in the form data
-      formData.set("image", downloadURL);
-
-      // Send the form data to the server
-      const response = await axios.post('http://localhost:3000/coupons', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-
-      console.log(response.data);
+      const response = await axios.post(
+        "http://localhost:3000/coupons",
+        couponData
+      );
 
       if (response.status === 201) {
-        alert('Coupon submitted successfully!');
+        toast.success("Coupon submitted successfully!");
         e.target.reset();
-        setError(null);
-      } else {
-        throw new Error('Failed to submit coupon');
+        setTermsAccepted(false);
       }
     } catch (error) {
-      console.error('Error:', error);
-      setError('Failed to submit coupon');
+      console.error("Submission error:", error);
+      toast.error(error.response?.data?.message || "Submission failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
-      <div className="bg-white border-b-2">
-        <div className="flex justify-between items-center py-4 px-6">
-          <div className="flex justify-between items-center space-x-4 w-1/2 rounded-lg">
-            <img src={logo_black} alt="logo" className="h-14" />
-            <input
-              type="text"
-              placeholder="Search For Items"
-              className="px-4 w-9/12 py-2 bg-slate-200 border rounded-lg"
-            />
-          </div>
+      <NavBar />
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 py-12 px-4 sm:px-6 lg:px-8">
+        <form onSubmit={handleSubmit} className="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-8 sm:p-12">
+          <header className="text-center mb-10 space-y-2">
+            <h1 className="text-3xl font-bold text-gray-900">Sell Your Coupon</h1>
+            <p className="text-gray-600">Reach thousands of potential buyers</p>
+          </header>
 
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-2">
-              <button className="bg-transparent items-center flex text-black text-xl font-semibold py-2 px-4">
-                Shop
-                <img src={down} alt="down " className="h-4" />
-              </button>
+          <div className="space-y-6">
+            {/* Brand Name */}
+            <div className="relative">
+              <Store className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="text"
+                name="Brand_Name"
+                placeholder="Brand Name"
+                className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
+                required
+              />
             </div>
 
-            <div className="flex items-center space-x-2">
-              <button className="bg-transparent items-center flex text-black text-xl font-semibold py-2 px-4">
-                Wallet
-                <img src={wallet} alt="wallet" className="h-6 ml-2" />
-              </button>
+            {/* Category */}
+            <div className="relative">
+              <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <select
+                name="Category"
+                className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all appearance-none bg-white"
+                required
+              >
+                <option value="">Select Category</option>
+                <option value="Fashion">Fashion</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Food">Food & Beverage</option>
+                <option value="Travel">Travel</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Health">Health & Beauty</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
-            <div className="flex items-center space-x-2">
-              <button className="bg-transparent items-center flex text-black text-xl font-semibold py-2 px-4">
-                Add New
-                <img src={add} alt="add" className="h-4 ml-1 mt-1" />
-              </button>
-            </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <button className="items-center flex text-black text-xl font-semibold py-2 px-4">
-             cart 0
-            </button>
-          </div>
-        </div>
-      </div>
 
-      <form onSubmit={handleSubmit}>
-        <div className="flex justify-evenly h-5/6">
-          <div>
-            <h1 className="ml-20 mb-20 text-5xl text-blue-900 font-semibold text-center mt-14 w-5/6">
-              Sell your Unused coupon here{" "}
-            </h1>
-            <img
-              className="ml-28 mt-36 animate-bounce"
-              src={discount}
-              alt="discount"
-            />
-          </div>
-          <div className="w-3/6 mt-28 h-3/6">
-            <div className="bg-amber-200 w-7/12 rounded-2xl h-4/6 ml-36">
-              <div className="text-center text-2xl mb-8 pt-3">Coupon Detail</div>
-              <div className="flex justify-center">
-                <input
-                  type="text"
-                  name="Brand_Name"
-                  placeholder="Brand"
-                  className="mb-8 w-9/12 text-center p-2 rounded-2xl font-semibold"
-                />
-              </div>
-              <div className="flex justify-evenly w-9/12 ml-14">
+            {/* Date & Price */}
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="relative">
+                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   type="date"
                   name="Date"
-                  placeholder="Expiration Date"
-                  className="mb-8 bg-white w-44 text-center p-2 rounded-2xl font-semibold"
+                  min={minDate}
+                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
+                  required
                 />
+              </div>
+              <div className="relative">
+                <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   type="number"
                   name="Price"
                   placeholder="Price"
-                  className="mb-8 bg-white w-44 text-center p-2 rounded-2xl font-semibold"
+                  min="0"
+                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
+                  required
                 />
               </div>
-              <div className="flex justify-center">
-                <input
-                  type="text"
-                  name="Description"
-                  placeholder="Description"
-                  className="mb-8 bg-white w-9/12 text-center p-2 rounded-2xl font-semibold"
-                />
-              </div>
-              <div className="flex justify-center">
-                <input
-                  type="text"
-                  name="Code"
-                  placeholder="Code"
-                  className="mb-8 bg-white w-9/12 text-center p-2 rounded-2xl font-semibold"
-                />
-              </div>
-              <div className="flex justify-center">
-                <input
-                  type="text"
-                  name="Link"
-                  placeholder="Redeem Now Link"
-                  className="mb-8 bg-white w-9/12 text-center p-2 rounded-2xl font-semibold"
-                />
-              </div>
-              <div className="flex justify-center">
-                <input
-                  type="file"
-                  name="image/"
-                  className="mb-8 bg-white w-9/12 text-center p-2 rounded-2xl font-semibold"
-                />
-              </div>
-              <div className="flex items-center ml-20">
-                <input type="checkbox" className="mr-2" id="terms" />
-                <label htmlFor="terms" className="text-sm text-gray-700">
-                  I accept the terms and conditions
-                </label>
-              </div>
-              <button type="submit" className="w-36 bg-amber-300 text-black p-2 rounded-lg mt-5 mb-5 ml-52 font-semibold">
-                Submit
+            </div>
+
+            {/* Description */}
+            <div>
+              <textarea
+                name="Description"
+                placeholder="Coupon details (optional)"
+                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all h-32"
+              />
+            </div>
+
+            {/* Coupon Code */}
+            <div className="relative">
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">#</div>
+              <input
+                type={showCode ? "text" : "password"}
+                name="Code"
+                placeholder="Coupon Code"
+                className="w-full pl-10 pr-12 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowCode(!showCode)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600"
+              >
+                {showCode ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
+
+            {/* Redeem Link */}
+            <div className="relative">
+              <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="url"
+                name="Link"
+                placeholder="Redemption URL"
+                className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
+                required
+              />
+            </div>
+
+            {/* Image Upload */}
+            <div className="relative">
+              <label className="block">
+                <span className="sr-only">Upload coupon image</span>
+                <input
+                  type="file"
+                  name="image"
+                  accept="image/*"
+                  className="w-full text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-blue-50 file:text-blue-700
+                    hover:file:bg-blue-100
+                    transition-colors cursor-pointer"
+                  required
+                />
+              </label>
+            </div>
+
+            {/* Terms Agreement */}
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="terms"
+                checked={termsAccepted}
+                onChange={(e) => setTermsAccepted(e.target.checked)}
+                className="peer hidden"
+                required
+              />
+              <label
+                htmlFor="terms"
+                className="flex items-center select-none cursor-pointer text-sm"
+              >
+                <div className={`mr-3 w-5 h-5 rounded border-2 flex items-center justify-center transition-colors
+                  ${termsAccepted ? 'border-blue-500 bg-blue-500' : 'border-gray-300'}`}
+                >
+                  <Check className={`w-4 h-4 text-white ${termsAccepted ? 'block' : 'hidden'}`} />
+                </div>
+                <span className="text-gray-600">
+                  I agree to the{" "}
+                  <a href="/terms" className="text-blue-600 hover:underline">
+                    terms & conditions
+                  </a>
+                </span>
+              </label>
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={loading || !termsAccepted}
+              className="w-full py-3 px-6 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white font-semibold rounded-lg transition-all duration-300 hover:shadow-lg flex items-center justify-center disabled:opacity-80 disabled:cursor-not-allowed"
+            >
+              {loading ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                  Processing...
+                </>
+              ) : (
+                "List My Coupon"
+              )}
+            </button>
+          </div>
+        </form>
+
+        {/* Pricing Information */}
+        <div className="max-w-2xl mx-auto mt-8 p-6 bg-white rounded-xl border border-blue-100">
+          <div className="text-center">
+            <h2 className="text-lg font-semibold text-gray-900 mb-1">
+              Transparent Pricing
+            </h2>
+            <p className="text-sm text-gray-600">
+              5% platform fee deducted only upon successful sale
+            </p>
           </div>
         </div>
-      </form>
 
-      <div className="flex w-screen justify-evenly">
-        <div className="font-semibold text-center w-2/5">
-          <h1 className="text-3xl text-cyan-400">
-            What is the charge for selling my gift card/voucher?
-          </h1>
-          <h2 className="text-xl">
-            There is a flat of 5% fee for selling your gift card/voucher on cansell. This fee is not levied at the time of posting, shall be deducted during payouts
-          </h2>
-          <h1 className="text-3xl text-cyan-400">
-            How will I be notified about the progress?
-          </h1>
-          <h2 className="text-xl">
-            At the time of listing, you shall be contacted if there is information needed on your posting, once all the information is approved, you post shall go live. At the time of go live, you shall be intimated via SMS. On purchase, you shall be notified via SMS to your registered phone. Payouts shall happen on purchase confirmation, team from Cansell will reach out to you for payout options.
-          </h2>
-          <h1 className="text-3xl text-cyan-400">
-            What are the payout options?
-          </h1>
-          <h2 className="text-xl">
-            You can choose from the following Payout options
-          </h2>
-        </div>
-        <div>
-          <img src={fox} alt="fox" />
-        </div>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={3000}
+          hideProgressBar
+          newestOnTop
+          theme="colored"
+        />
       </div>
     </>
   );

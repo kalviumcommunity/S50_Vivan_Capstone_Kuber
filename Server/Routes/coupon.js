@@ -1,11 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { couponmodel } = require("../Model/coupon");
+const  Coupon  = require("../Model/coupon");
 
-// Get all coupons
 router.get('/coupons', async (req, res, next) => {
     try {
-        const coupons = await couponmodel.find();
+        const coupons = await Coupon.find();
         res.json(coupons);
     } catch (error) {
         console.error(error);
@@ -13,10 +12,9 @@ router.get('/coupons', async (req, res, next) => {
     }
 });
 
-// Get a single coupon by ID
-router.get('/coupons/:id', async (req, res) => {
+router.get('/coupons/:id', async (req, res, next) => {
     try {
-        const coupon = await couponmodel.findById(req.params.id);
+        const coupon = await Coupon.findById(req.params.id);
         if (!coupon) {
             return res.status(404).json({ message: 'Coupon not found' });
         }
@@ -27,37 +25,36 @@ router.get('/coupons/:id', async (req, res) => {
     }
 });
 
-// Create a new coupon
-router.post('/coupons', async (req, res, next) => {
+router.post("/coupons", async (req, res) => {
     try {
-        console.log('Incoming request body:', req.body);
+        const { Brand_Name, Code, Date, Description, Link, Price, image, userId } = req.body;
+        console.log(Brand_Name, Code, Date, Description, Link, Price, image, userId)
 
-        const { image, ...couponData } = req.body;
+        if (!Brand_Name || !Date || !Price || !Code || !Link || !image || !userId) {
+            return res.status(400).json({ error: "Missing required fields" });
+        }
 
-
-        console.log('Extracted coupon data:', couponData);
-        console.log('Image URL:', image);
-
-
-        const newCoupon = new couponmodel({ ...couponData, image });
+        const newCoupon = new Coupon(req.body);
         await newCoupon.save();
 
-
         res.status(201).json(newCoupon);
-    } catch (error) {
-
-        console.error('Error during coupon creation:', error);
-
-
-        res.status(500).json({ message: 'Failed to create coupon', error: error.message });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 });
 
 
-// Update an existing coupon by ID
+
 router.put('/coupons/:id', async (req, res, next) => {
     try {
-        const updatedCoupon = await couponmodel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const { Brand_Name, Date, Price, Description, Code, Link, image } = req.body;
+
+        if (!Brand_Name || !Date || !Price || !Code || !Link || !image) {
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
+
+        const updatedCoupon = await Coupon.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        console.log("came");
         if (!updatedCoupon) {
             return res.status(404).json({ message: 'Coupon not found' });
         }
@@ -68,10 +65,9 @@ router.put('/coupons/:id', async (req, res, next) => {
     }
 });
 
-// Delete a coupon by ID
 router.delete('/coupons/:id', async (req, res, next) => {
     try {
-        const deletedCoupon = await couponmodel.findByIdAndDelete(req.params.id);
+        const deletedCoupon = await Coupon.findByIdAndDelete(req.params.id);
         if (!deletedCoupon) {
             return res.status(404).json({ message: 'Coupon not found' });
         }
@@ -81,5 +77,8 @@ router.delete('/coupons/:id', async (req, res, next) => {
         res.status(500).json({ message: 'Failed to delete coupon' });
     }
 });
+
+
+
 
 module.exports = router;

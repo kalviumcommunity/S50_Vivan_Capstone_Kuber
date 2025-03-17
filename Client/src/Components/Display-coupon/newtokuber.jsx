@@ -15,18 +15,21 @@ const EmblaCarousel = ({ slides, options }) => {
   } = usePrevNextButtons(emblaApi);
 
   return (
-    <section className="relative">
+    <section className="relative group">
       <div className="embla__viewport overflow-hidden w-full" ref={emblaRef}>
-        <div className="embla__container flex select-none touch-pan-y">
+        <div className="embla__container flex select-none touch-pan-y -ml-4">
           {slides.map((slide, index) => (
-            <div className="embla__slide min-w-1/5" key={index}>
+            <div className="embla__slide min-w-[320px] pl-4" key={index}>
               {slide}
             </div>
           ))}
         </div>
       </div>
-      <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
-      <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
+      
+      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
+        <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
+      </div>
     </section>
   );
 };
@@ -49,26 +52,62 @@ const Newtokuber = () => {
   const slides = coupons.map((coupon, index) => (
     <div
       key={index}
-      className="bg-sky-300 h-32 w-72 rounded-lg flex items-center ml-3 space-x-4 p-4 cursor-pointer"
+      className="relative bg-gradient-to-br from-blue-400 to-cyan-400 h-48 w-80 rounded-2xl flex items-center p-6 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl group"
       onClick={() => handleCouponClick(coupon)}
     >
-      <img
-        className="h-24 w-24 border-gray-950 border-2 rounded-full"
-        src={wonder}
-        alt={coupon.Brand_Name}
-      />
-      <div>
-        <h1 className="text-lg font-bold">{coupon.Brand_Name}</h1>
-        <h3 className="text-sm">Only for RS {coupon.Price}</h3>
+      <div className="absolute inset-0 bg-noise-pattern opacity-10 rounded-2xl"></div>
+      <div className="relative z-10 flex items-center space-x-6">
+        <div className="relative">
+          <div className="absolute inset-0 bg-white/30 blur-2xl rounded-full"></div>
+          <img
+            className="h-28 w-28 border-4 border-white/20 rounded-full object-cover shadow-xl"
+            src={wonder}
+            alt={coupon.Brand_Name}
+          />
+        </div>
+        <div className="space-y-2">
+          <h1 className="text-2xl font-bold text-white">{coupon.Brand_Name}</h1>
+          <div className="flex items-center space-x-2">
+            <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium text-white">
+              Limited Offer
+            </span>
+          </div>
+          <h3 className="text-3xl font-bold text-white">₹{coupon.Price}</h3>
+        </div>
+      </div>
+      <div className="absolute bottom-4 right-4">
+        <div className="w-8 h-8 flex items-center justify-center bg-white/20 rounded-full">
+          <svg 
+            className="w-4 h-4 text-white"
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </div>
       </div>
     </div>
   ));
 
   return (
-    <div className="flex ml-20">
-      <div className="bg-white rounded-lg p-6 space-y-4 w-full">
-        <h1 className="text-3xl font-bold">New To Kuber</h1>
-        <EmblaCarousel slides={slides} options={{ slidesToScroll: 3 }} />
+    <div className="container mx-auto px-4 py-16">
+      <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-3xl p-8 shadow-xl border border-gray-100">
+        <div className="mb-8">
+          <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+            New to Kuber
+          </h2>
+          <p className="text-lg text-gray-600 mt-2">Exclusive offers for new members</p>
+        </div>
+        
+        <EmblaCarousel 
+          slides={slides} 
+          options={{ 
+            loop: true,
+            align: 'start',
+            dragFree: true
+          }} 
+        />
       </div>
     </div>
   );

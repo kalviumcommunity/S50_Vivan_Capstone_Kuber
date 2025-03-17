@@ -6,50 +6,47 @@ const DataBase = require("./Config/database");
 const userRoutes = require("./Routes/user");
 const userCoupon = require("./Routes/coupon");
 const auth = require("./Routes/auth");
+const wishlistRoutes = require("./Routes/wishlist");
 require("./Config/Passport");
 const cors = require("cors");
 const passport = require("passport");
 const session = require("express-session");
+
+// ✅ Connect to Database
 DataBase();
 
+// ✅ Session Configuration (ONLY ONCE)
 app.use(session({
-  secret: "cATS",
+  secret: process.env.SESSION_SECRET || "fallback_secret",
   resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false },
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === "production",  // Set `true` in production
+    httpOnly: true,
+    sameSite: "strict",
+  },
 }));
 
+// ✅ Initialize Passport
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.session());  // ✅ Required to persist login sessions
 
-app.use(cors(
-  {
-    origin: "http://localhost:5173",
-    credentials: true
-  }
-))
+// ✅ CORS Setup
+app.use(cors({
+  origin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
+  credentials: true,
+}));
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// ✅ Route Handling
 app.use("/", userRoutes);
 app.use("/", userCoupon);
-app.use("/auth", auth);
+app.use("/", wishlistRoutes);
+app.use("/auth", auth); // ✅ Correct usage
 
-// app.use((req, res, next) => {
-//   const error = new Error("Not Found");
-//   error.status = 404;
-//   next(error);
-// });
-
-// app.use((err, req, res, next) => {
-//   const status = err.status || 500;
-//   res.status(status).json({
-//     error: {
-//       message: err.message || "Internal Server Error",
-//     },
-//   });
-// });
-
-
+// ✅ Start Server
 app.listen(port, () => {
   console.log(`🚀 Server running on PORT ${port}`);
 });

@@ -44,8 +44,8 @@ function SignUpModal({ onClose, onSignUpSuccess }) {
       });
 
       console.log("User signed up successfully:", response.data);
-      onSignUpSuccess(); // This triggers navigation to the main page
-      onClose(); // Close the sign-up modal
+      onSignUpSuccess(); 
+      onClose(); 
     } catch (error) {
       console.error("Error signing up:", error);
     }

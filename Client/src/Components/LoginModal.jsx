@@ -7,56 +7,79 @@ import EmailLoginModal from "./EmailLogicModal";
 function LoginModal({ onClose }) {
   const [showEmailLogin, setShowEmailLogin] = useState(false);
 
-  const handleEmailLogin = () => {
-    setShowEmailLogin(true);
-  };
-
-  const handleGoogleSignUp = () => {
-    window.location.href = "http://localhost:3000/auth/google";
-  };
-
+  const handleEmailLogin = () => setShowEmailLogin(true);
+  const handleGoogleSignUp = () => window.location.href = "http://localhost:3000/auth/google";
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-    <div className="bg-slate-200 w-1/4 p-5 rounded-lg">
-      <button onClick={onClose} className="float-right font-bold">
-        X
-      </button>
-      <h2 className="text-xl mb-2">Login to Kuber</h2>
-      {!showEmailLogin ? (
-        <div className="space-y-4">
-          <button className="flex justify-evenly items-center gap-2 w-full py-2 rounded-lg border-2 border-slate-500 text-base font-medium text-gray-700 bg-white" onClick={handleGoogleSignUp}>
-            <img className="h-6 w-8" src={google} alt="Google" />
-            Login with Google
-          </button>
-          <button
-            className="flex justify-evenly items-center gap-2 w-full py-2 rounded-lg border-2 border-slate-500 text-base font-medium text-gray-700 bg-white"
-            onClick={handleEmailLogin}
-          >
-            <img className="h-6 w-8" src={Facebook} alt="Facebook" />
-            Login with Facebook
-          </button>
-          <button
-            className="flex justify-evenly items-center gap-2 w-full py-2 rounded-lg border-2 border-slate-500 text-base font-medium text-gray-700 bg-amber-300"
-            onClick={handleEmailLogin}
-          >
-            <img className="h-6 w-8 " src={Email} alt="Email" />
-            Login with Email
-          </button>
-          <div className="ml-2 mt-4">
-            <span>Not a member? </span>
-            <a href="/signup" className="text-blue-500 hover:text-blue-700" >
-              Join now
-            </a>
-          </div>
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50">
+      <div className="bg-white rounded-2xl p-8 w-full max-w-md relative shadow-2xl">
+        {/* Close Button */}
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">Welcome Back</h2>
+          <p className="text-gray-500">Continue saving with Kuber</p>
         </div>
-      ) : (
-        <EmailLoginModal onClose={onClose} />
-      )}
+
+        {!showEmailLogin ? (
+          <div className="space-y-4">
+            {/* Google Button */}
+            <button
+              onClick={handleGoogleSignUp}
+              className="flex items-center justify-center w-full gap-3 px-6 py-3.5 rounded-xl border border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all duration-300"
+            >
+              <img src={google} alt="Google" className="w-6 h-6" />
+              <span className="text-gray-700 font-medium">Continue with Google</span>
+            </button>
+
+            {/* Facebook Button */}
+            <button
+              className="flex items-center justify-center w-full gap-3 px-6 py-3.5 rounded-xl border border-gray-200 hover:border-blue-600 hover:bg-blue-100 transition-all duration-300"
+            >
+              <img src={Facebook} alt="Facebook" className="w-6 h-6" />
+              <span className="text-gray-700 font-medium">Continue with Facebook</span>
+            </button>
+
+            {/* Email Button */}
+            <button
+              onClick={handleEmailLogin}
+              className="flex items-center justify-center w-full gap-3 px-6 py-3.5 rounded-xl border border-transparent bg-amber-400 hover:bg-amber-500 transition-all duration-300"
+            >
+              <img src={Email} alt="Email" className="w-6 h-6" />
+              <span className="text-gray-900 font-medium">Continue with Email</span>
+            </button>
+
+            {/* Divider */}
+            <div className="flex items-center my-6">
+              <div className="flex-1 border-t border-gray-200"></div>
+              <span className="px-4 text-sm text-gray-400">or</span>
+              <div className="flex-1 border-t border-gray-200"></div>
+            </div>
+
+            {/* Registration Prompt */}
+            <p className="text-center text-gray-500">
+              Not a member?{" "}
+              <button 
+                className="text-blue-500 hover:text-blue-600 font-semibold transition-colors"
+              >
+                Join now
+              </button>
+            </p>
+          </div>
+        ) : (
+          <EmailLoginModal onClose={onClose} />
+        )}
+      </div>
     </div>
-  </div>
   );
 }
 
 export default LoginModal;
-

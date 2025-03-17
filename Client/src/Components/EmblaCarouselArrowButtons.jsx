@@ -1,26 +1,43 @@
-// EmblaCarouselArrowButtons.jsx
 import React from 'react';
 
 export const PrevButton = ({ onClick, disabled }) => (
   <button
-    className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-white bg-opacity-80 border-none p-2 cursor-pointer z-10"
+    className={`absolute top-1/2 left-4 transform -translate-y-1/2 p-3 rounded-full shadow-lg z-10 transition-all ${
+      disabled ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110 active:scale-95'
+    } bg-white/90 backdrop-blur-sm border border-gray-200 hover:border-amber-400`}
     onClick={onClick}
     disabled={disabled}
+    aria-label="Previous slide"
   >
-    <svg className="w-5 h-5 fill-current" viewBox="0 0 532 532">
-      <path d="M399.39 121.51a26.39 26.39 0 0 1 0 37.28L224.2 334.4a26.39 26.39 0 0 1-37.29 0L79.51 227.39a26.39 26.39 0 0 1 0-37.28l37.28-37.29a26.39 26.39 0 0 1 37.28 0L212.65 225l112.18-112.18a26.39 26.39 0 0 1 37.28 0l37.28 37.29z"/>
+    <svg 
+      className="w-6 h-6 text-gray-700"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
     </svg>
   </button>
 );
 
 export const NextButton = ({ onClick, disabled }) => (
   <button
-    className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-white bg-opacity-80 border-none p-2 cursor-pointer z-10"
+    className={`absolute top-1/2 right-4 transform -translate-y-1/2 p-3 rounded-full shadow-lg z-10 transition-all ${
+      disabled ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110 active:scale-95'
+    } bg-white/90 backdrop-blur-sm border border-gray-200 hover:border-amber-400`}
     onClick={onClick}
     disabled={disabled}
+    aria-label="Next slide"
   >
-    <svg className="w-5 h-5 fill-current" viewBox="0 0 532 532">
-      <path d="M132.61 410.49a26.39 26.39 0 0 1 0-37.28l175.19-175.61a26.39 26.39 0 0 1 37.29 0L452.49 304.61a26.39 26.39 0 0 1 0 37.28l-37.28 37.29a26.39 26.39 0 0 1-37.28 0L319.35 307l-112.18 112.18a26.39 26.39 0 0 1-37.28 0l-37.28-37.29z"/>
+    <svg 
+      className="w-6 h-6 text-gray-700"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
     </svg>
   </button>
 );
@@ -29,8 +46,15 @@ export const usePrevNextButtons = (emblaApi) => {
   const [prevBtnDisabled, setPrevBtnDisabled] = React.useState(true);
   const [nextBtnDisabled, setNextBtnDisabled] = React.useState(true);
 
-  const onPrevButtonClick = React.useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
-  const onNextButtonClick = React.useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
+  const onPrevButtonClick = React.useCallback(() => {
+    emblaApi?.scrollPrev();
+    // Remove window.scrollTo
+  }, [emblaApi]);
+
+  const onNextButtonClick = React.useCallback(() => {
+    emblaApi?.scrollNext();
+    // Remove window.scrollTo
+  }, [emblaApi]);
 
   const onSelect = React.useCallback(() => {
     if (!emblaApi) return;
@@ -40,9 +64,23 @@ export const usePrevNextButtons = (emblaApi) => {
 
   React.useEffect(() => {
     if (!emblaApi) return;
+    
+    // Initialize and set up event listeners
     emblaApi.on('select', onSelect);
+    emblaApi.on('reInit', onSelect);
     onSelect();
+
+    // Cleanup
+    return () => {
+      emblaApi.off('select', onSelect);
+      emblaApi.off('reInit', onSelect);
+    };
   }, [emblaApi, onSelect]);
 
-  return { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick };
+  return { 
+    prevBtnDisabled, 
+    nextBtnDisabled, 
+    onPrevButtonClick, 
+    onNextButtonClick 
+  };
 };

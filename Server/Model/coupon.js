@@ -3,10 +3,14 @@ const mongoose = require("mongoose");
 const CouponSchema = new mongoose.Schema({
     Brand_Name: {
         type: String,
-        required: true,  
+        required: true,
+    },
+    Category: {
+        type: String,
+        required: true,
     },
     Date: {
-        type: Date,
+        type: String,
         required: true,
     },
     Price: {
@@ -26,10 +30,14 @@ const CouponSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        required: true, 
+        required: true,
     },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User', 
+        required: true,
+    }
 });
 
 const Coupon = mongoose.model("Coupon", CouponSchema);
-
-module.exports = { couponmodel: Coupon };
+module.exports = Coupon;

@@ -1,159 +1,185 @@
-// MainPage component 
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo_black from "../assets/logo-black.png";
-import add from "../assets/add.png";
-import down from "../assets/down.png";
-import wallet from "../assets/Wallet.png";
+import axios from "axios";
+import NavBar from "./navbar";
+import Newtokuber from "./Display-coupon/newtokuber";
 import wonder from "../assets/wonder.png";
 import off from "../assets/off.png";
-import Newtokuber from "./Display-coupon/newtokuber";
 
 function MainPage() {
   const [coupons, setCoupons] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Function to navigate to the Add New Page
-  const goToAddNewPage = () => {
-    navigate("/Addnew");
-  };
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/auth/user", { withCredentials: true })
+      .then((response) => {
+        localStorage.setItem("userId", response.data.userId);
+      })
+      .catch(() => {
+        console.log("❌ Not logged in");
+        localStorage.removeItem("userId");
+      });
+  }, []);
 
-  // Function to navigate to the Main Page
-  const goToMainPage = () => {
-    navigate("/mainpage");
-  };
-
-  // Fetching coupons data from the backend when the component mounts
   useEffect(() => {
     fetch("http://localhost:3000/coupons")
       .then((response) => response.json())
-      .then((data) => setCoupons(data))
-      .catch((error) => console.error("Error fetching data:", error));
+      .then((data) => {
+        setCoupons(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      });
   }, []);
 
   return (
     <>
-      <div className="bg-white">
-        <div className="flex justify-between items-center py-4 px-6 ">
-          <div className="flex justify-between items-center space-x-4 w-1/2 rounded-lg">
-            <img src={logo_black} alt="logo" className="h-14" />
-            <input
-              type="text"
-              placeholder="Search For Items"
-              className="px-4 w-9/12 py-2 bg-slate-200 border rounded-lg"
+      <NavBar />
+      {loading ? (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-amber-400 border-t-transparent"></div>
+          <p className="text-gray-600 font-medium">Loading Amazing Deals...</p>
+        </div>
+      ) : (
+        <>
+          {/* Hero Section */}
+          <div className="relative bg-gradient-to-br from-cyan-400 to-blue-600 min-h-[70vh] flex flex-col lg:flex-row justify-center items-center px-6 py-16 lg:py-0 gap-8 overflow-hidden">
+            <div className="relative z-10 text-center lg:text-left max-w-2xl space-y-6">
+              <h1 className="text-4xl lg:text-6xl font-extrabold text-white leading-tight animate-fade-in-up">
+                Earn Gold Coins with Kuber, 
+                <span className="block mt-4 bg-gradient-to-r from-amber-300 to-amber-500 bg-clip-text text-transparent">
+                  Redeem for Rewards!
+                </span>
+              </h1>
+              <button 
+                className="bg-amber-400 hover:bg-amber-500 text-gray-900 px-8 py-4 rounded-full font-bold text-lg transition-all transform hover:scale-105 shadow-lg"
+                onClick={() => navigate('/rewards')}
+              >
+                Explore Rewards →
+              </button>
+            </div>
+            <img 
+              className="relative z-10 h-64 lg:h-96 animate-float" 
+              src={wonder} 
+              alt="Rewards illustration" 
             />
+            <div className="absolute inset-0 bg-noise-pattern opacity-10"></div>
           </div>
 
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-2">
-              <button className="bg-transparent items-center flex text-black text-xl font-semibold  py-2 px-4">
-                Shop
-                <img src={down} alt="down " className="h-4 " />
-              </button>
+          <Newtokuber />
+
+          {/* Trending Coupons Section */}
+          <div className="container mx-auto px-6 py-16">
+            <div className="max-w-7xl mx-auto">
+              <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">
+                Trending Coupons
+                <span className="block mt-2 text-amber-500 text-xl font-medium">Fresh deals updated daily</span>
+              </h1>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {coupons.slice(0, 6).map((coupon, index) => (
+                  <div
+                    key={index}
+                    className="group relative bg-white rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-100/20 to-blue-100/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div className="relative flex items-start space-x-4">
+                      <div className="flex-shrink-0">
+                        <div className="h-24 w-24 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
+                          <span className="text-white text-2xl font-bold">{coupon.discount}%</span>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <h2 className="text-xl font-bold text-gray-900">{coupon.storeName}</h2>
+                        <p className="text-gray-600 line-clamp-2">{coupon.description || "Exciting discounts available now!"}</p>
+                        <button className="text-amber-600 font-medium flex items-center hover:text-amber-700">
+                          View Deal
+                          <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-
-            <div className="flex items-center  space-x-2">
-              <button className="bg-transparent  items-center flex text-black text-xl font-semibold py-2 px-4">
-                Wallet
-                <img src={wallet} alt="wallet" className="h-6 ml-2" />
-              </button>
-            </div>
-            <div className="flex items-center space-x-2">
-              <button className="bg-transparent items-center flex text-black text-xl font-semibold py-2 px-4" onClick={goToAddNewPage}>
-                Add New
-                <img src={add} alt="add" className="h-4 ml-1 mt-1" />
-              </button>
-            </div>
           </div>
-          <div className="flex items-center space-x-4">
-            <button className=" items-center flex text-black text-xl  font-semibold py-2 px-4">
-              Cart 0
-            </button>
-          </div>
-        </div>
-      </div>
-      <div className="bg-cyan-200 h-96 justify-evenly flex ">
-        <h1 className="text-5xl w-2/4 mr-10 flex mt-40 font-semibold text-center">
-          Earn Gold Coins with Kuber, redeem them for gift cards!
-        </h1>
-        <img className="h-4/6 mt-20" src={wonder} alt={wonder} />
-      </div>
 
-      <Newtokuber />
-
-      <div className="ml-20 mt-8">
-        <div className="bg-white rounded-lg p-6 space-y-4">
-          <div>
-            <h1 className="text-3xl font-bold">
-              Stores with the Most Successful Coupons
-            </h1>
-          </div>
-          <div className="flex">
-            <div className="bg-sky-300 h-32 w-96 rounded-lg flex items-center space-x-4 p-4">
-              <img
-                className="h-24 w-24 border-gray-950 border-2 rounded-lg"
-                src={wonder}
-                alt="logo_black"
+          {/* CTA Section */}
+          <div className="max-w-7xl mx-6 lg:mx-auto my-16 relative rounded-3xl overflow-hidden bg-gradient-to-r from-amber-400 to-amber-500">
+            <div className="flex flex-col lg:flex-row justify-between items-center px-8 py-12">
+              <div className="text-center lg:text-left max-w-xl space-y-6">
+                <h1 className="text-3xl lg:text-4xl font-bold text-gray-900">
+                  Discover More Exclusive Deals
+                </h1>
+                <p className="text-lg text-gray-800">
+                  Explore our curated collection of premium offers
+                </p>
+                <button 
+                  className="bg-gray-900 text-white px-8 py-3 rounded-full font-semibold hover:bg-gray-800 transition-colors"
+                  onClick={() => navigate('/stores')}
+                >
+                  Browse Stores Now
+                </button>
+              </div>
+              <img 
+                className="mt-8 lg:mt-0 h-56 lg:h-72 animate-pulse-slow" 
+                src={off} 
+                alt="Special offers" 
               />
-              <div>
-                <h1 className="text-lg font-bold">Kuber Deals</h1>
-                <h3 className="text-sm">Earn 10 Gold coins</h3>
-              </div>
-            </div>
-            <div className="bg-sky-300 ml-20 h-32 w-96 rounded-lg flex items-center space-x-4 p-4">
-              <img
-                className="h-24 w-24 border-gray-950 border-2 rounded-lg"
-                src={wonder}
-                alt="logo_black"
-              />
-              <div>
-                <h1 className="text-lg font-bold">Kuber Deals</h1>
-              </div>
             </div>
           </div>
-        </div>
 
-        <div>
-          <div className="bg-white rounded-lg p-6 space-y-4">
-            <div>
-              <h1 className="text-3xl font-bold">Newly Added Coupons</h1>
-            </div>
-            <div className="flex">
-              <div className="bg-sky-300 h-32  rounded-lg flex items-center space-x-4 p-4">
-                <img
-                  className="h-24 w-24 border-gray-950 border-2 rounded-lg"
-                  src={wonder}
-                  alt="logo_black"
-                />
+          {/* Footer */}
+          <footer className="bg-gray-900 text-gray-300">
+            <div className="max-w-7xl mx-auto px-6 py-16">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div className="space-y-4">
+                  <h3 className="text-2xl font-bold text-white">Kuber</h3>
+                  <p className="text-sm">Your ultimate destination for smart savings and exclusive rewards.</p>
+                </div>
+                <div className="space-y-4">
+                  <h4 className="text-white font-semibold">Company</h4>
+                  <ul className="space-y-2 text-sm">
+                    <li><a href="#" className="hover:text-amber-400 transition-colors">About Us</a></li>
+                    <li><a href="#" className="hover:text-amber-400 transition-colors">Careers</a></li>
+                    <li><a href="#" className="hover:text-amber-400 transition-colors">Blog</a></li>
+                  </ul>
+                </div>
+                <div className="space-y-4">
+                  <h4 className="text-white font-semibold">Support</h4>
+                  <ul className="space-y-2 text-sm">
+                    <li><a href="#" className="hover:text-amber-400 transition-colors">FAQ</a></li>
+                    <li><a href="#" className="hover:text-amber-400 transition-colors">Contact</a></li>
+                    <li><a href="#" className="hover:text-amber-400 transition-colors">Privacy Policy</a></li>
+                  </ul>
+                </div>
+                <div className="space-y-4">
+                  <h4 className="text-white font-semibold">Connect</h4>
+                  <div className="flex space-x-4">
+                    {['facebook', 'twitter', 'instagram'].map((social) => (
+                      <a key={social} href="#" className="p-2 bg-gray-800 rounded-full hover:bg-amber-500 transition-colors">
+                        <img 
+                          src={`/icons/${social}.svg`} 
+                          alt={social} 
+                          className="h-5 w-5" 
+                        />
+                      </a>
+                    ))}
+                  </div>
+                </div>
               </div>
-              <div className="bg-sky-300 ml-20 h-32  rounded-lg flex items-center space-x-4 p-4">
-                <img
-                  className="h-24 w-24 border-gray-950 border-2 rounded-lg"
-                  src={wonder}
-                  alt="logo_black"
-                />
+              <div className="border-t border-gray-800 mt-12 pt-8 text-center text-sm">
+                © {new Date().getFullYear()} Kuber. All rights reserved.
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <div className="bg-amber-200 rounded-xl w-[90%] h-72 flex justify-evenly ml-24 mt-10">
-        <div className="mt-20">
-          <h1 className="text-4xl mb-5">See stores with more deals</h1>
-          <h2 className="text-2xl">Browse our store directory</h2>
-        </div>
-        <div>
-          <img className="w-80  flex justify-center" src={off} alt="" />
-        </div>
-      </div>
-      <div className="bg-black w-screen h-[40vh] mt-20">
-        <div className="flex pt-10">
-          <h1 className="text-white text-2xl ml-10">Company</h1>
-          <h1 className="text-white text-2xl ml-10">Help</h1>
-          <h1 className="text-white text-2xl ml-10">News</h1>
-          <h1 className="text-white text-2xl ml-10">Careers</h1>
-        </div>
-      </div>
+          </footer>
+        </>
+      )}
     </>
   );
 }
